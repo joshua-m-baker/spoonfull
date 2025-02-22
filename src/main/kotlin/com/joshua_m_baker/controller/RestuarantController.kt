@@ -15,6 +15,7 @@ class ExperienceController {
      fun getExperiences(): List<Experience> {
          return listOf(
              Experience(
+                 experienceId = "1",
                  date = LocalDate.now(),
                  restaurantName = "Vinai",
                  restaurantId = "1",
@@ -24,6 +25,7 @@ class ExperienceController {
                  )
              ),
              Experience(
+                 experienceId = "2",
                  date = LocalDate.now(),
                  restaurantName = "LeeAnn Chinn",
                  restaurantId = "2",

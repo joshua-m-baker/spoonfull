@@ -5,6 +5,7 @@ import java.time.LocalDate
 
 @Serdeable
 data class Experience(
+    val experienceId: String,
     val date: LocalDate,
     val restaurantName: String,
     val restaurantId: String,
