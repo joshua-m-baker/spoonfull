@@ -1,3 +1,18 @@
+# Spoonfull
+
+Usage:
+```
+./gradlew run
+```
+
+Access OpenApi Spec:
+```
+./gradlew run
+http://localhost:8080/swagger/spoonfull-0.0.yml
+(or same endpoint in hosted version)
+```
+
+
 ## Micronaut 4.7.6 Documentation
 
 - [User Guide](https://docs.micronaut.io/4.7.6/guide/index.html)
