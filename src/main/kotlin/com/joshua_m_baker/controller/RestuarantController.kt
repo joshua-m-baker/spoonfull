@@ -22,7 +22,8 @@ class ExperienceController {
                  reviews = listOf(
                     Review("Josh", "1", 5, listOf(Dish("Crabby Fried Rice")), notes = "Yay free food"),
                     Review("Sara", "2", 5, listOf(Dish("Lamb Hearts"))),
-                 )
+                 ),
+                 rating = 5,
              ),
              Experience(
                  experienceId = "2",
@@ -31,7 +32,8 @@ class ExperienceController {
                  restaurantId = "2",
                  reviews = listOf(
                      Review("Josh", "1", 3, emptyList()),
-                 )
+                 ),
+                 rating = 3,
              )
          )
     }

@@ -9,5 +9,6 @@ data class Experience(
     val date: LocalDate,
     val restaurantName: String,
     val restaurantId: String,
-    val reviews: List<Review>
+    val reviews: List<Review>,
+    val rating: Int,
 )
