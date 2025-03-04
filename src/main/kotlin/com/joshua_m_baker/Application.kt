@@ -8,16 +8,17 @@ import io.swagger.v3.oas.annotations.info.License
 import io.swagger.v3.oas.annotations.servers.Server
 
 @OpenAPIDefinition(
-	info = Info(
-		title = "Spoonfull",
-		version = "0.0",
-		description = "Rest API for Spoonfull website",
-	),
-	servers = [Server(url = "https://spoonfull.joshua-m-baker.com")]
+    info = Info(
+        title = "Spoonfull",
+        version = "0.0",
+        description = "Rest API for Spoonfull website",
+    ),
+    servers = [Server(url = "https://spoonfull.joshua-m-baker.com")]
 )
 object Application {
-	@JvmStatic
-	fun main(args: Array<String>) {
-		run(*args)
-	}
+    @JvmStatic
+    fun main(args: Array<String>) {
+
+        run(*args)
+    }
 }

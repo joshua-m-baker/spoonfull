@@ -39,6 +39,8 @@ dependencies {
     implementation("org.jdbi:jdbi3-kotlin:3.48.0")
     implementation("org.jdbi:jdbi3-jackson2")
     implementation("com.h2database:h2:2.3.232")
+    implementation("org.flywaydb:flyway-core:11.3.4")
+    implementation("org.flywaydb:flyway-database-postgresql:11.3.4")
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
     runtimeOnly("ch.qos.logback:logback-classic")
@@ -48,8 +50,6 @@ dependencies {
     testImplementation("io.kotest.extensions:kotest-extensions-testcontainers:2.0.2")
     testImplementation("io.kotest:kotest-runner-junit5:5.9.1")
     testImplementation("org.testcontainers:postgresql:1.19.8")
-    testImplementation("org.flywaydb:flyway-core:11.3.4")
-    testImplementation("org.flywaydb:flyway-database-postgresql:11.3.4")
 }
 
 application {
