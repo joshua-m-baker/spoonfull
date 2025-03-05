@@ -23,7 +23,7 @@ class ExperienceRepository(
                 .createQuery(query)
                 .map { rs, _ ->
                     Experience(
-                        experienceId = UUID.fromString(rs.getString("experience_id")),
+                        id = UUID.fromString(rs.getString("id")),
                         date = rs.getDate("date").toLocalDate(),
                         restaurantName = rs.getString("restaurant_name"),
                         restaurantId = UUID.fromString(rs.getString("restaurant_id")),
@@ -36,14 +36,14 @@ class ExperienceRepository(
     }
 
     fun getExperienceById(id: UUID): Experience? {
-        val query = "SELECT * FROM experience WHERE experience_id = :id"
+        val query = "SELECT * FROM experience WHERE id = :id"
         return jdbi.open().use { handle ->
             handle
                 .createQuery(query)
                 .bind("id", id)
                 .map { rs, _ ->
                     Experience(
-                        experienceId = UUID.fromString(rs.getString("experience_id")),
+                        id = UUID.fromString(rs.getString("id")),
                         date = rs.getDate("date").toLocalDate(),
                         restaurantName = rs.getString("restaurant_name"),
                         restaurantId = UUID.fromString(rs.getString("restaurant_id")),
@@ -58,8 +58,8 @@ class ExperienceRepository(
 
     fun insertExperience(experience: Experience) {
         val query =
-            """INSERT into experience (experience_id, date, restaurant_name, restaurant_id, reviews, rating)
-                |VALUES (:experienceId, :date, :restaurantName, :restaurantId, :reviews::json, :rating)""".trimMargin()
+            """INSERT into experience (id, date, restaurant_name, restaurant_id, reviews, rating)
+                |VALUES (:id, :date, :restaurantName, :restaurantId, :reviews::json, :rating)""".trimMargin()
         return jdbi.open().use { handle ->
             handle
                 .createUpdate(query)

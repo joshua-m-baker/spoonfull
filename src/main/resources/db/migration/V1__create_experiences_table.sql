@@ -1,5 +1,5 @@
 CREATE TABLE experience (
-    experience_id UUID PRIMARY KEY,
+    id UUID PRIMARY KEY,
     date DATE NOT NULL,
     restaurant_name TEXT NOT NULL,
     restaurant_id UUID NOT NULL,

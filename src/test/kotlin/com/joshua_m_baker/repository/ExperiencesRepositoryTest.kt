@@ -32,7 +32,7 @@ class ExperiencesRepositoryTest(
 
     should("should insert and find experience") {
         val expectedExperience = Experience(
-            experienceId = UUID.randomUUID(),
+            id = UUID.randomUUID(),
             date = LocalDate.now(),
             restaurantName = "Vinai",
             restaurantId = UUID.randomUUID(),
@@ -42,13 +42,13 @@ class ExperiencesRepositoryTest(
         val repo = applicationContext.getBean(ExperienceRepository::class.java)
         repo.insertExperience(expectedExperience)
 
-        val experience = repo.getExperienceById(expectedExperience.experienceId)
+        val experience = repo.getExperienceById(expectedExperience.id)
         experience shouldBe expectedExperience
     }
 
     should("post creates experience and get returns it") {
         val experience = Experience(
-            experienceId = UUID.randomUUID(),
+            id = UUID.randomUUID(),
             date = LocalDate.now(),
             restaurantName = "Vinai",
             restaurantId = UUID.randomUUID(),
@@ -71,7 +71,7 @@ class ExperiencesRepositoryTest(
         val createdExperience = createResponse.body()
 
         val restExperience = httpClient.toBlocking()
-            .retrieve("/experiences/${createdExperience.experienceId}", Experience::class.java)
+            .retrieve("/experiences/${createdExperience.id}", Experience::class.java)
 
         createdExperience shouldBe experience
         restExperience shouldBe createdExperience
