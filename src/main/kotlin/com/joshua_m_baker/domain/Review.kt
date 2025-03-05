@@ -5,9 +5,9 @@ import org.jdbi.v3.json.Json
 
 @Serdeable
 data class Review(
-    val personName: String,     // String
-    val personId: String,       // string/ fk
-    val rating: Int,            // int
-    @Json val dishes: List<Dish>,     // jsonB?
-    val notes: String? = null,  // string (nullable?
+    val personName: String,
+    val personId: String,
+    val rating: Int,
+    @Json val dishes: List<Dish>,
+    val notes: String? = null,
 )

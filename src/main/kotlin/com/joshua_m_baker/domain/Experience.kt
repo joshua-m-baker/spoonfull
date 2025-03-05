@@ -7,7 +7,7 @@ import java.util.*
 
 @Serdeable
 data class Experience(
-    val experienceId: UUID = UUID.randomUUID(),   // string/ primary key
+    val id: UUID = UUID.randomUUID(),   // string/ primary key
     val date: LocalDate,        // date
     val restaurantName: String, // string
     val restaurantId: UUID,   // string/ FK
