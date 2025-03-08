@@ -58,7 +58,7 @@ class ExperiencesRepositoryTest(
                     personId = "1",
                     rating = 5,
                     notes = "asdf",
-                    dishes = listOf(Dish(dishName = "Hamburger"))
+                    dishes = listOf(Dish(name = "Hamburger"))
                 )
             ),
             rating = 5,
