@@ -5,6 +5,8 @@ import jakarta.inject.Singleton
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.bindKotlin
 import org.jdbi.v3.core.kotlin.mapTo
+import java.util.*
+import kotlin.jvm.optionals.getOrNull
 
 @Singleton
 class RestaurantRepository(
@@ -29,6 +31,18 @@ class RestaurantRepository(
                 .createQuery(query)
                 .mapTo<Restaurant>()
                 .toList()
+        }
+    }
+
+    fun find(id: UUID): Restaurant? {
+        val query = "SELECT * FROM restaurant WHERE id = :id"
+        return jdbi.open().use { handle ->
+            handle
+                .createQuery(query)
+                .bind("id", id)
+                .mapTo<Restaurant>()
+                .findOne()
+                .getOrNull()
         }
     }
 }
