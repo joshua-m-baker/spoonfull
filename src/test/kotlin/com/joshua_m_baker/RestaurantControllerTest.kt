@@ -16,7 +16,7 @@ class RestaurantControllerTest(
     @Client("/restaurants") httpClient: HttpClient,
 ) : ShouldSpec({
 
-    should("create an experience then get it") {
+    should("create a restaurant then get it") {
         val restaurant = Restaurant(name = "World Street Kitchen")
 
         val createResponse =
