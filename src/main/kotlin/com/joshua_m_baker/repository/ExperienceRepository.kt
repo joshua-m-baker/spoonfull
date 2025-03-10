@@ -16,26 +16,7 @@ class ExperienceRepository(
     private val objectMapper: ObjectMapper
 ) {
 
-    fun findAllExperiences(): List<Experience> {
-        val query = "SELECT * FROM experience ORDER BY date LIMIT 5"
-        return jdbi.open().use { handle ->
-            handle
-                .createQuery(query)
-                .map { rs, _ ->
-                    Experience(
-                        id = UUID.fromString(rs.getString("id")),
-                        date = rs.getDate("date").toLocalDate(),
-                        restaurantName = rs.getString("restaurant_name"),
-                        restaurantId = UUID.fromString(rs.getString("restaurant_id")),
-                        reviews = objectMapper.readValue(rs.getString("reviews"), Argument.listOf(Review::class.java)),
-                        rating = rs.getInt("rating")
-                    )
-                }
-                .toList()
-        }
-    }
-
-    fun getExperienceById(id: UUID): Experience? {
+    fun find(id: UUID): Experience? {
         val query = "SELECT * FROM experience WHERE id = :id"
         return jdbi.open().use { handle ->
             handle
@@ -56,7 +37,26 @@ class ExperienceRepository(
         }
     }
 
-    fun insertExperience(experience: Experience) {
+    fun findAll(): List<Experience> {
+        val query = "SELECT * FROM experience ORDER BY date LIMIT 5"
+        return jdbi.open().use { handle ->
+            handle
+                .createQuery(query)
+                .map { rs, _ ->
+                    Experience(
+                        id = UUID.fromString(rs.getString("id")),
+                        date = rs.getDate("date").toLocalDate(),
+                        restaurantName = rs.getString("restaurant_name"),
+                        restaurantId = UUID.fromString(rs.getString("restaurant_id")),
+                        reviews = objectMapper.readValue(rs.getString("reviews"), Argument.listOf(Review::class.java)),
+                        rating = rs.getInt("rating")
+                    )
+                }
+                .toList()
+        }
+    }
+
+    fun insert(experience: Experience) {
         val query =
             """INSERT into experience (id, date, restaurant_name, restaurant_id, reviews, rating)
                 |VALUES (:id, :date, :restaurantName, :restaurantId, :reviews::json, :rating)""".trimMargin()

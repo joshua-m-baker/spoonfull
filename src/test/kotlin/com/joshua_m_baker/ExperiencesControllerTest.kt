@@ -1,12 +1,12 @@
-package com.joshua_m_baker.repository
+package com.joshua_m_baker
 
 import com.joshua_m_baker.domain.Dish
 import com.joshua_m_baker.domain.Experience
+import com.joshua_m_baker.domain.Restaurant
 import com.joshua_m_baker.domain.Review
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.shouldBe
-import io.micronaut.context.ApplicationContext
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
@@ -17,8 +17,7 @@ import java.time.LocalDate
 import java.util.*
 
 @MicronautTest(transactional = false)
-class ExperiencesRepositoryTest(
-    private val applicationContext: ApplicationContext,
+class ExperiencesControllerTest(
     @Client("/") httpClient: HttpClient,
 ) : ShouldSpec({
 
@@ -30,35 +29,22 @@ class ExperiencesRepositoryTest(
         exception.status shouldBe HttpStatus.NOT_FOUND
     }
 
-    should("should insert and find experience") {
-        val expectedExperience = Experience(
-            id = UUID.randomUUID(),
-            date = LocalDate.now(),
-            restaurantName = "Vinai",
-            restaurantId = UUID.randomUUID(),
-            reviews = listOf(),
-            rating = 5,
-        )
-        val repo = applicationContext.getBean(ExperienceRepository::class.java)
-        repo.insertExperience(expectedExperience)
-
-        val experience = repo.getExperienceById(expectedExperience.id)
-        experience shouldBe expectedExperience
-    }
-
     should("post creates experience and get returns it") {
+        val restaurant = Restaurant(name = "World Street Kitchen")
+        httpClient.toBlocking().exchange(HttpRequest.POST("/restaurants", restaurant), Restaurant::class.java)
+
         val experience = Experience(
             id = UUID.randomUUID(),
             date = LocalDate.now(),
-            restaurantName = "Vinai",
-            restaurantId = UUID.randomUUID(),
+            restaurantName = restaurant.name,
+            restaurantId = restaurant.id,
             reviews = listOf(
                 Review(
                     personName = "Josh",
                     personId = "1",
                     rating = 5,
                     notes = "asdf",
-                    dishes = listOf(Dish(dishName = "Hamburger"))
+                    dishes = listOf(Dish(name = "Hamburger"))
                 )
             ),
             rating = 5,

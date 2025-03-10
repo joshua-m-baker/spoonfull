@@ -15,20 +15,20 @@ class ExperienceController(
 
     @Get("/{id}")
     fun getExperience(@PathVariable id: UUID): HttpResponse<Experience> {
-        val experience = experienceRepository.getExperienceById(id) ?: return HttpResponse.notFound()
+        val experience = experienceRepository.find(id) ?: return HttpResponse.notFound()
         return HttpResponse.ok(experience)
     }
 
     @Get(produces = [MediaType.TEXT_JSON])
     fun getExperiences(): List<Experience> {
-        return experienceRepository.findAllExperiences()
+        return experienceRepository.findAll()
     }
 
     @Post
     fun createExperience(
         @Body experience: Experience
     ): Experience {
-        experienceRepository.insertExperience(experience)
+        experienceRepository.insert(experience)
         return experience
     }
 }
