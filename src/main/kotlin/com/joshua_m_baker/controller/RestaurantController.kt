@@ -10,10 +10,11 @@ import java.util.*
 class RestaurantController(
     private val restaurantRepository: RestaurantRepository,
 ) {
-    @Post
-    fun createRestaurant(@Body restaurant: Restaurant): Restaurant {
-        restaurantRepository.insertRestaurant(restaurant)
-        return restaurant
+
+    @Get("/{id}")
+    fun getRestaurant(@PathVariable id: UUID): HttpResponse<Restaurant> {
+        val restaurant = restaurantRepository.find(id) ?: return HttpResponse.notFound()
+        return HttpResponse.ok(restaurant)
     }
 
     @Get
@@ -21,9 +22,9 @@ class RestaurantController(
         return restaurantRepository.findAll()
     }
 
-    @Get("/{id}")
-    fun getRestaurant(@PathVariable id: UUID): HttpResponse<Restaurant> {
-        val restaurant = restaurantRepository.find(id) ?: return HttpResponse.notFound()
-        return HttpResponse.ok(restaurant)
+    @Post
+    fun createRestaurant(@Body restaurant: Restaurant): Restaurant {
+        restaurantRepository.insert(restaurant)
+        return restaurant
     }
 }
