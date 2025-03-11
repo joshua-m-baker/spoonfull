@@ -6,7 +6,9 @@ import com.joshua_m_baker.domain.Restaurant
 import com.joshua_m_baker.domain.Review
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.HttpClient
@@ -61,5 +63,28 @@ class ExperiencesControllerTest(
 
         createdExperience shouldBe experience
         restExperience shouldBe createdExperience
+    }
+
+    should("have at least one experience after creating one") {
+        val restaurant = Restaurant(name = "World Street Kitchen")
+        httpClient.toBlocking().exchange(HttpRequest.POST("/restaurants", restaurant), Restaurant::class.java)
+
+        val experience = Experience(
+            id = UUID.randomUUID(),
+            date = LocalDate.now(),
+            restaurantName = restaurant.name,
+            restaurantId = restaurant.id,
+            reviews = listOf(),
+            rating = 5,
+        )
+
+        val createResponse =
+            httpClient.toBlocking().exchange(HttpRequest.POST("/experiences", experience), Experience::class.java)
+        createResponse.status.code shouldBe HttpStatus.OK.code
+
+        val restExperiences = httpClient.toBlocking()
+            .retrieve(HttpRequest.GET<List<Experience>>("/experiences"), Argument.listOf(Experience::class.java))
+
+        restExperiences shouldContain experience
     }
 })

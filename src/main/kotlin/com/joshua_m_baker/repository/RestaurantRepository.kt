@@ -13,7 +13,7 @@ class RestaurantRepository(
     private val jdbi: Jdbi,
 ) {
     fun find(id: UUID): Restaurant? {
-        val query = "SELECT * FROM restaurant WHERE id = :id"
+        val query = "SELECT id, name FROM restaurant WHERE id = :id"
         return jdbi.open().use { handle ->
             handle
                 .createQuery(query)
@@ -25,7 +25,7 @@ class RestaurantRepository(
     }
 
     fun findAll(): List<Restaurant> {
-        val query = "SELECT * FROM restaurant"
+        val query = "SELECT id, name FROM restaurant"
         return jdbi.open().use { handle ->
             handle
                 .createQuery(query)

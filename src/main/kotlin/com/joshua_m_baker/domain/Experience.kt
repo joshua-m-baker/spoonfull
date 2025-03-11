@@ -10,8 +10,8 @@ import java.util.*
 data class Experience(
     @Schema(accessMode = Schema.AccessMode.READ_ONLY) val id: UUID = UUID.randomUUID(),   // string/ primary key
     val date: LocalDate,        // date
-    val restaurantName: String, // string
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY) val restaurantName: String = "Unknown", // string
     val restaurantId: UUID,   // string/ FK
     @Json val reviews: List<Review> = listOf(),
-    @Schema(accessMode = Schema.AccessMode.READ_ONLY) val rating: Int,            // int
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY) val rating: Int = 0,            // int
 )
