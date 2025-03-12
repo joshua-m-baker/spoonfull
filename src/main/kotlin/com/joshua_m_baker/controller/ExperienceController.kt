@@ -5,7 +5,6 @@ import com.joshua_m_baker.domain.DatabaseExperience
 import com.joshua_m_baker.domain.ExperienceResponse
 import com.joshua_m_baker.repository.ExperienceRepository
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import java.time.OffsetDateTime
 import java.util.*
@@ -22,7 +21,7 @@ class ExperienceController(
         return HttpResponse.ok(experience)
     }
 
-    @Get(produces = [MediaType.TEXT_JSON])
+    @Get
     fun getExperiences(): List<ExperienceResponse> {
         return experienceRepository.findAll()
     }

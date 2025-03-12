@@ -1,6 +1,6 @@
 package com.joshua_m_baker.repository
 
-import com.joshua_m_baker.domain.Restaurant
+import com.joshua_m_baker.domain.RestaurantResponse
 import jakarta.inject.Singleton
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.bindKotlin
@@ -12,29 +12,29 @@ import kotlin.jvm.optionals.getOrNull
 class RestaurantRepository(
     private val jdbi: Jdbi,
 ) {
-    fun find(id: UUID): Restaurant? {
+    fun find(id: UUID): RestaurantResponse? {
         val query = "SELECT id, name FROM restaurant WHERE id = :id"
         return jdbi.open().use { handle ->
             handle
                 .createQuery(query)
                 .bind("id", id)
-                .mapTo<Restaurant>()
+                .mapTo<RestaurantResponse>()
                 .findOne()
                 .getOrNull()
         }
     }
 
-    fun findAll(): List<Restaurant> {
+    fun findAll(): List<RestaurantResponse> {
         val query = "SELECT id, name FROM restaurant"
         return jdbi.open().use { handle ->
             handle
                 .createQuery(query)
-                .mapTo<Restaurant>()
+                .mapTo<RestaurantResponse>()
                 .toList()
         }
     }
 
-    fun insert(restaurant: Restaurant) {
+    fun insert(restaurant: RestaurantResponse) {
         val query =
             """INSERT into restaurant (id, name)
                 |VALUES (:id, :name)""".trimMargin()

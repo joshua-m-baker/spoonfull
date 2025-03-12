@@ -1,6 +1,7 @@
 package com.joshua_m_baker
 
 import com.joshua_m_baker.domain.*
+import com.joshua_m_baker.repository.RestaurantRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContain
@@ -18,6 +19,7 @@ import java.util.*
 @MicronautTest(transactional = false)
 class ExperiencesControllerTest(
     @Client("/") httpClient: HttpClient,
+    private val restaurantRepository: RestaurantRepository,
 ) : ShouldSpec({
 
     should("no matching experience returns 404") {
@@ -29,8 +31,8 @@ class ExperiencesControllerTest(
     }
 
     should("post creates experience and get returns it") {
-        val restaurant = Restaurant(name = "World Street Kitchen")
-        httpClient.toBlocking().exchange(HttpRequest.POST("/restaurants", restaurant), Restaurant::class.java)
+        val restaurant = RestaurantResponse(id = UUID.randomUUID(), name = "World Street Kitchen")
+        restaurantRepository.insert(restaurant)
 
         val experience = CreateExperience(
             date = LocalDate.now(),
@@ -64,8 +66,8 @@ class ExperiencesControllerTest(
     }
 
     should("have at least one experience after creating one") {
-        val restaurant = Restaurant(name = "World Street Kitchen")
-        httpClient.toBlocking().exchange(HttpRequest.POST("/restaurants", restaurant), Restaurant::class.java)
+        val restaurant = RestaurantResponse(id = UUID.randomUUID(), name = "World Street Kitchen")
+        restaurantRepository.insert(restaurant)
 
         val experience = CreateExperience(
             date = LocalDate.now(),
