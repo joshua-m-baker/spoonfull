@@ -3,5 +3,6 @@ CREATE TABLE experience (
     date DATE NOT NULL,
     restaurant_id UUID NOT NULL,
     reviews json NOT NULL,
-    rating INT CHECK (rating BETWEEN 1 AND 5)
+    created_ts TIMESTAMP NOT NULL,
+    updated_ts TIMESTAMP NOT NULL
 );
