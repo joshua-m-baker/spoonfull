@@ -1,6 +1,7 @@
 package com.joshua_m_baker.repository
 
-import com.joshua_m_baker.domain.Experience
+import com.joshua_m_baker.domain.DatabaseExperience
+import com.joshua_m_baker.domain.ExperienceResponse
 import com.joshua_m_baker.domain.Review
 import io.micronaut.core.type.Argument
 import io.micronaut.serde.ObjectMapper
@@ -16,9 +17,9 @@ class ExperienceRepository(
     private val objectMapper: ObjectMapper
 ) {
 
-    fun find(id: UUID): Experience? {
+    fun find(id: UUID): ExperienceResponse? {
         val query =
-            """SELECT exp.id, exp.date, res.name, exp.restaurant_id, exp.reviews, exp.rating 
+            """SELECT exp.id, exp.date, res.name, exp.restaurant_id, exp.reviews 
                 |FROM experience exp
                 |INNER JOIN restaurant res ON exp.restaurant_id = res.id
                 |WHERE exp.id = :id""".trimMargin()
@@ -27,13 +28,12 @@ class ExperienceRepository(
                 .createQuery(query)
                 .bind("id", id)
                 .map { rs, _ ->
-                    Experience(
+                    ExperienceResponse(
                         id = UUID.fromString(rs.getString("id")),
                         date = rs.getDate("date").toLocalDate(),
                         restaurantName = rs.getString("name"),
                         restaurantId = UUID.fromString(rs.getString("restaurant_id")),
                         reviews = objectMapper.readValue(rs.getString("reviews"), Argument.listOf(Review::class.java)),
-                        rating = rs.getInt("rating")
                     )
                 }
                 .findOne()
@@ -41,9 +41,9 @@ class ExperienceRepository(
         }
     }
 
-    fun findAll(): List<Experience> {
+    fun findAll(): List<ExperienceResponse> {
         val query =
-            """SELECT exp.id, exp.date, res.name, exp.restaurant_id, exp.reviews, exp.rating 
+            """SELECT exp.id, exp.date, res.name, exp.restaurant_id, exp.reviews
                 |FROM experience exp
                 |INNER JOIN restaurant res ON exp.restaurant_id = res.id
                 |ORDER BY exp.date""".trimMargin()
@@ -51,23 +51,22 @@ class ExperienceRepository(
             handle
                 .createQuery(query)
                 .map { rs, _ ->
-                    Experience(
+                    ExperienceResponse(
                         id = UUID.fromString(rs.getString("id")),
                         date = rs.getDate("date").toLocalDate(),
                         restaurantName = rs.getString("name"),
                         restaurantId = UUID.fromString(rs.getString("restaurant_id")),
                         reviews = objectMapper.readValue(rs.getString("reviews"), Argument.listOf(Review::class.java)),
-                        rating = rs.getInt("rating")
                     )
                 }
                 .toList()
         }
     }
 
-    fun insert(experience: Experience) {
+    fun insert(experience: DatabaseExperience) {
         val query =
-            """INSERT into experience (id, date, restaurant_id, reviews, rating)
-                |VALUES (:id, :date, :restaurantId, :reviews::json, :rating)""".trimMargin()
+            """INSERT into experience (id, date, restaurant_id, reviews, created_ts, updated_ts)
+                |VALUES (:id, :date, :restaurantId, :reviews::json, :createdTs, :updatedTs)""".trimMargin()
         return jdbi.open().use { handle ->
             handle
                 .createUpdate(query)

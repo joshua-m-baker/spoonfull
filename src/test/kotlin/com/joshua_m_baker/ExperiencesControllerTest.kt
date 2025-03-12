@@ -1,9 +1,7 @@
 package com.joshua_m_baker
 
-import com.joshua_m_baker.domain.Dish
-import com.joshua_m_baker.domain.Experience
-import com.joshua_m_baker.domain.Restaurant
-import com.joshua_m_baker.domain.Review
+import com.joshua_m_baker.domain.*
+import com.joshua_m_baker.repository.RestaurantRepository
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.ShouldSpec
 import io.kotest.matchers.collections.shouldContain
@@ -21,6 +19,7 @@ import java.util.*
 @MicronautTest(transactional = false)
 class ExperiencesControllerTest(
     @Client("/") httpClient: HttpClient,
+    private val restaurantRepository: RestaurantRepository,
 ) : ShouldSpec({
 
     should("no matching experience returns 404") {
@@ -32,13 +31,11 @@ class ExperiencesControllerTest(
     }
 
     should("post creates experience and get returns it") {
-        val restaurant = Restaurant(name = "World Street Kitchen")
-        httpClient.toBlocking().exchange(HttpRequest.POST("/restaurants", restaurant), Restaurant::class.java)
+        val restaurant = RestaurantResponse(id = UUID.randomUUID(), name = "World Street Kitchen")
+        restaurantRepository.insert(restaurant)
 
-        val experience = Experience(
-            id = UUID.randomUUID(),
+        val experience = CreateExperience(
             date = LocalDate.now(),
-            restaurantName = restaurant.name,
             restaurantId = restaurant.id,
             reviews = listOf(
                 Review(
@@ -49,42 +46,48 @@ class ExperiencesControllerTest(
                     dishes = listOf(Dish(name = "Hamburger"))
                 )
             ),
-            rating = 5,
         )
 
         val createResponse =
-            httpClient.toBlocking().exchange(HttpRequest.POST("/experiences", experience), Experience::class.java)
+            httpClient.toBlocking()
+                .exchange(HttpRequest.POST("/experiences", experience), ExperienceResponse::class.java)
         createResponse.status.code shouldBe HttpStatus.OK.code
 
         val createdExperience = createResponse.body()
 
         val restExperience = httpClient.toBlocking()
-            .retrieve("/experiences/${createdExperience.id}", Experience::class.java)
+            .retrieve("/experiences/${createdExperience.id}", ExperienceResponse::class.java)
 
-        createdExperience shouldBe experience
+        createdExperience.date shouldBe experience.date
+        createdExperience.restaurantId shouldBe experience.restaurantId
+        createdExperience.reviews shouldBe experience.reviews
+        createdExperience.restaurantName shouldBe restaurant.name
         restExperience shouldBe createdExperience
     }
 
     should("have at least one experience after creating one") {
-        val restaurant = Restaurant(name = "World Street Kitchen")
-        httpClient.toBlocking().exchange(HttpRequest.POST("/restaurants", restaurant), Restaurant::class.java)
+        val restaurant = RestaurantResponse(id = UUID.randomUUID(), name = "World Street Kitchen")
+        restaurantRepository.insert(restaurant)
 
-        val experience = Experience(
-            id = UUID.randomUUID(),
+        val experience = CreateExperience(
             date = LocalDate.now(),
-            restaurantName = restaurant.name,
             restaurantId = restaurant.id,
             reviews = listOf(),
-            rating = 5,
         )
 
         val createResponse =
-            httpClient.toBlocking().exchange(HttpRequest.POST("/experiences", experience), Experience::class.java)
+            httpClient.toBlocking()
+                .exchange(HttpRequest.POST("/experiences", experience), ExperienceResponse::class.java)
         createResponse.status.code shouldBe HttpStatus.OK.code
 
-        val restExperiences = httpClient.toBlocking()
-            .retrieve(HttpRequest.GET<List<Experience>>("/experiences"), Argument.listOf(Experience::class.java))
+        val createdExperience = createResponse.body()
 
-        restExperiences shouldContain experience
+        val restExperiences = httpClient.toBlocking()
+            .retrieve(
+                HttpRequest.GET<List<ExperienceResponse>>("/experiences"),
+                Argument.listOf(ExperienceResponse::class.java)
+            )
+
+        restExperiences shouldContain createdExperience
     }
 })
