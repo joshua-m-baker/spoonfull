@@ -2,6 +2,7 @@ package com.joshua_m_baker.controller
 
 import com.joshua_m_baker.domain.CreateRestaurant
 import com.joshua_m_baker.domain.RestaurantResponse
+import com.joshua_m_baker.domain.UpdateRestaurant
 import com.joshua_m_baker.repository.RestaurantRepository
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
@@ -31,5 +32,30 @@ class RestaurantController(
         )
         restaurantRepository.insert(restaurant)
         return restaurant
+    }
+
+    @Patch("/{id}")
+    fun updateRestaurant(
+        @PathVariable id: UUID,
+        @Body updateRestaurant: UpdateRestaurant
+    ): HttpResponse<RestaurantResponse> {
+        val updated = restaurantRepository.update(id, updateRestaurant)
+
+        return if (updated) {
+            HttpResponse.ok(
+                RestaurantResponse(
+                    id = id,
+                    name = updateRestaurant.name
+                )
+            )
+        } else {
+            HttpResponse.notFound()
+        }
+    }
+
+    @Delete("/{id}")
+    fun deleteRestaurant(@PathVariable id: UUID): HttpResponse<Void> {
+        restaurantRepository.delete(id)
+        return HttpResponse.noContent()
     }
 }

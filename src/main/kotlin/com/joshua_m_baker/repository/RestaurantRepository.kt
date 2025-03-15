@@ -1,6 +1,7 @@
 package com.joshua_m_baker.repository
 
 import com.joshua_m_baker.domain.RestaurantResponse
+import com.joshua_m_baker.domain.UpdateRestaurant
 import jakarta.inject.Singleton
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.bindKotlin
@@ -42,6 +43,28 @@ class RestaurantRepository(
             handle
                 .createUpdate(query)
                 .bindKotlin(restaurant)
+                .execute()
+        }
+    }
+
+    fun update(id: UUID, updateRestaurant: UpdateRestaurant): Boolean {
+        val query = """UPDATE restaurant set name = :name WHERE id = :id""".trimMargin()
+        return jdbi.open().use { handle ->
+            handle
+                .createUpdate(query)
+                .bind("id", id)
+                .bindKotlin(updateRestaurant)
+                .execute()
+        } != 0
+    }
+
+    fun delete(id: UUID) {
+        val query =
+            """DELETE from restaurant WHERE id = :id""".trimMargin()
+        return jdbi.open().use { handle ->
+            handle
+                .createUpdate(query)
+                .bind("id", id)
                 .execute()
         }
     }
