@@ -9,6 +9,11 @@ data class CreateRestaurant(
 )
 
 @Serdeable
+data class UpdateRestaurant(
+    val name: String,
+)
+
+@Serdeable
 data class RestaurantResponse(
     val id: UUID,
     val name: String,
