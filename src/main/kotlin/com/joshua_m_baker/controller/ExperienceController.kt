@@ -10,7 +10,7 @@ import java.time.OffsetDateTime
 import java.util.*
 
 
-@Controller("/experiences")
+@Controller("/api/experiences")
 class ExperienceController(
     private val experienceRepository: ExperienceRepository,
 ) {

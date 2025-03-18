@@ -8,7 +8,7 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.annotation.*
 import java.util.*
 
-@Controller("/restaurants")
+@Controller("/api/restaurants")
 class RestaurantController(
     private val restaurantRepository: RestaurantRepository,
 ) {
