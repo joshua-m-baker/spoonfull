@@ -19,7 +19,7 @@ import java.util.*
 
 @MicronautTest(transactional = false)
 class RestaurantControllerTest(
-    @Client("/") httpClient: HttpClient,
+    @Client("/api") httpClient: HttpClient,
 ) : ShouldSpec({
 
     should("create one restaurant, have it exist in list of all restaurants, delete it, then it does not exist") {

@@ -18,7 +18,7 @@ import java.util.*
 
 @MicronautTest(transactional = false)
 class ExperiencesControllerTest(
-    @Client("/") httpClient: HttpClient,
+    @Client("/api") httpClient: HttpClient,
     private val restaurantRepository: RestaurantRepository,
 ) : ShouldSpec({
 
