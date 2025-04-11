@@ -1,4 +1,5 @@
 plugins {
+    application
     id("org.jetbrains.kotlin.jvm") version "1.9.25"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
     id("com.google.devtools.ksp") version "1.9.25-1.0.20"
@@ -41,6 +42,7 @@ dependencies {
     implementation("com.h2database:h2:2.3.232")
     implementation("org.flywaydb:flyway-core:11.3.4")
     implementation("org.flywaydb:flyway-database-postgresql:11.3.4")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.80")
     compileOnly("io.micronaut:micronaut-http-client")
     compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
     runtimeOnly("ch.qos.logback:logback-classic")
@@ -92,4 +94,9 @@ tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative"
     jdkVersion = "21"
 }
 
+tasks.named<Test>("test") {
+    testLogging {
+        showStandardStreams = true
+    }
+}
 

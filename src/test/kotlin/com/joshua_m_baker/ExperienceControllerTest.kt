@@ -17,7 +17,7 @@ import java.time.LocalDate
 import java.util.*
 
 @MicronautTest(transactional = false)
-class ExperiencesControllerTest(
+class ExperienceControllerTest(
     @Client("/api") httpClient: HttpClient,
     private val restaurantRepository: RestaurantRepository,
 ) : ShouldSpec({
